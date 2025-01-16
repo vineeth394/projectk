@@ -19,8 +19,6 @@ on:
 jobs:
   # Parallel Job: Build and Test on Self-Hosted EC2 (with Tomcat installed)
   build_and_test:
-    # This job will run on a self-hosted runner with the "staging" label.
-    # Ensure your self-hosted runner for staging has the label `staging` assigned to it.
     runs-on: [self-hosted, staging]  # Self-hosted EC2 with Tomcat installed (Staging)
     steps:
       - name: Checkout code
@@ -41,8 +39,6 @@ jobs:
 
   # Sequential Jobs: SonarQube Analysis and Artifact Upload
   sonar_analysis:
-    # This job will also run on the self-hosted runner with the "staging" label.
-    # Ensure the staging runner has the "staging" label.
     runs-on: [self-hosted, staging]  # Self-hosted EC2 with Tomcat installed (Staging)
     needs: build_and_test
     if: ${{ needs.build_and_test.result == 'success' }}  # Run only if build and test succeed
@@ -57,8 +53,6 @@ jobs:
           sonar-host-url: 'https://sonarcloud.io'
 
   upload_artifact:
-    # This job will also run on the self-hosted runner with the "staging" label.
-    # Ensure the staging runner has the "staging" label.
     runs-on: [self-hosted, staging]  # Self-hosted EC2 with Tomcat installed (Staging)
     needs: build_and_test
     if: ${{ needs.build_and_test.result == 'success' }}  # Run only if build and test succeed
@@ -75,14 +69,11 @@ jobs:
 
   # Matrix Job: Deployment to Staging and Production (Self-Hosted EC2 with Tomcat installed)
   deploy:
-    # This job will deploy to both staging and production environments based on the matrix configuration.
-    # The staging environment will use the self-hosted runner with the "staging" label.
-    # The production environment will use the self-hosted runner with the "production" label.
-    runs-on: [self-hosted, ${{ matrix.environment }}]  # Use dynamic environment (staging or production)
-    needs: [sonar_analysis, upload_artifact]  # Waits for SonarQube and Artifactory jobs to complete
     strategy:
       matrix:
-        environment: [staging, production]  # Deploy to both staging and production environments
+        environment: [staging, production]  # Deploy to both environments
+    runs-on: [self-hosted, ${{ matrix.environment }}]  # Use dynamic environment (staging or production)
+    needs: [sonar_analysis, upload_artifact]  # Waits for SonarQube and Artifactory jobs to complete
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -109,8 +100,6 @@ jobs:
 
   # Conditional Job: Trigger Deploy Only if Deploy Input is True (Manual Trigger)
   deploy_input_condition:
-    # This job will run on the self-hosted runner with the "production" label.
-    # Ensure your production runner has the label `production` assigned to it.
     runs-on: [self-hosted, production]  # Self-hosted EC2 with Tomcat installed (Production)
     if: ${{ github.event.inputs.deploy == 'true' }}  # Only runs if the deploy input is set to true from workflow_dispatch
     steps:
