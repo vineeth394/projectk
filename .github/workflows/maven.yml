@@ -137,19 +137,3 @@ jobs:
             fi
           fi
         if: ${{ needs.upload_artifact.result == 'success' }}  # Deploy only if the artifact upload was successful
-
-  # Conditional Job: Trigger Deploy Only if Deploy Input is True (Manual Trigger)
-  deploy_input_condition:
-    # This job will run on the self-hosted runner with the "production" label.
-    # Ensure your production runner has the label `production` assigned to it.
-    runs-on: [self-hosted, production]  # Self-hosted EC2 with Tomcat installed (Production)
-    if: ${{ github.event.inputs.deploy == 'true' }}  # Only runs if the deploy input is set to true from workflow_dispatch
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Deploy to Production (Input Triggered)
-        run: |
-          echo "Manual deploy triggered, deploying to production..."
-          # Deployment logic here
-        if: ${{ github.event.inputs.deploy == 'true' }}  # Condition based on the input
