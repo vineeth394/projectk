@@ -6,13 +6,13 @@
 
     <groupId>com.example</groupId>
     <artifactId>my-helloworld</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>war</packaging>
 <distributionManagement>
     <repository>
         <id>assignment</id>
         <name>assignment-libs-release</name>
-        <url>http://15.206.75.58:8082/artifactory/assignment-libs-release/</url>
+        <url>http://3.110.142.51:8082/artifactory/assignment-libs-release/</url>
     </repository>
 </distributionManagement>
 <properties>
