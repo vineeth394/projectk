@@ -3,11 +3,11 @@ name: Java CI with Maven, SonarQube, and Production Deployment
 on:
   push:
     branches:
-      - master
+      - main
       - 'feature/*'
   pull_request:
     branches:
-      - master
+      - main
       - 'feature/*'
   workflow_dispatch:
     inputs:
