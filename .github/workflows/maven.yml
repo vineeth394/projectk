@@ -130,6 +130,7 @@ jobs:
           elif [ "${{ matrix.environment }}" == "production" ]; then
             # Deployment to the production environment (only triggered on master branch)
             if [[ $GITHUB_REF == "refs/heads/master" ]]; then
+              sudo chown -R ubuntu:ubuntu /opt
               cd /opt/apache-tomcat-10.1.34/webapps/
               curl -L -u "admin:cmVmdGtuOjAxOjE3Njg1NjE0Mjk6aU9jaXYxTFZDaVVZSzRqV2tLc0JrM0k1T0ht" -O "http://3.110.142.51:8082/artifactory/assignment-libs-release-local/com/example/my-helloworld/1.0.0/my-helloworld-1.0.0.war"
             else
